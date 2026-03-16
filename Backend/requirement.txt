@@ -1,0 +1,9 @@
+sagemaker<3
+scikit-learn
+pandas
+numpy
+matplotlib
+seaborn
+awscli
+tensorflow
+opencv-python

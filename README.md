@@ -1,36 +1,59 @@
-# 🔬 Skin Disease Detection AI
-
 <div align="center">
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![React](https://img.shields.io/badge/React-18+-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+# 🔬 Skin Disease Detection AI
 
-**An AI-powered web application for dermoscopic skin disease classification with Grad-CAM explainability.**
+**Deep Learning · Grad-CAM Explainability · FastAPI · React**
+
+[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![React](https://img.shields.io/badge/React-18+-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](https://tensorflow.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
+*An end-to-end AI-powered web application for dermoscopic skin disease classification, featuring Grad-CAM visual explainability.*
+
+[Features](#-features) · [Demo](#-demo) · [Architecture](#-architecture) · [Getting Started](#-getting-started) · [API Reference](#-api-reference) · [Model Details](#-model-details)
 
 </div>
 
 ---
 
-## 📸 Demo
+## 🧠 What This Project Does
 
-| Upload & Predict | Grad-CAM Heatmap |
-|:-:|:-:|
-| Upload a skin image and get an instant diagnosis | Visual explanation of where the model focused |
+This application allows users to upload an image of a skin condition and receive:
 
-> ⚠️ **Medical Disclaimer:** This tool is intended for educational and research purposes only. It does not replace professional medical advice, diagnosis, or treatment. Always consult a qualified dermatologist for any skin concerns.
+- An **AI-generated diagnosis** across 8 common skin diseases (bacterial, viral, fungal, and parasitic)
+- A **confidence score** for the prediction
+- A **Grad-CAM heatmap** that visually highlights the exact regions of the image the model used to make its decision — making the AI transparent and interpretable
+
+This bridges the gap between powerful deep learning models and real-world explainability, a critical requirement in clinical and medical AI applications.
+
+> ⚠️ **Medical Disclaimer:** This tool is intended for educational and research purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified dermatologist for any skin concerns.
 
 ---
 
 ## ✨ Features
 
-- 🩺 **Multi-class skin disease classification** across bacterial, viral, and fungal conditions
-- 🌡️ **Confidence scoring** — percentage confidence for each prediction
-- 🔥 **Grad-CAM heatmap** — visual explanation highlighting the regions the model used to make its decision
-- 🖱️ **Drag-and-drop upload** — supports JPG, PNG, WEBP, BMP
-- ⚡ **Real-time inference** via FastAPI backend
-- 🎨 **Clean, modern dark UI** built with React
+| Feature | Description |
+|---|---|
+| 🩺 **Multi-class Classification** | Diagnoses 8 skin conditions across 4 disease categories |
+| 📊 **Confidence Scoring** | Outputs a softmax probability score per prediction |
+| 🔥 **Grad-CAM Explainability** | Highlights diagnostically relevant image regions with a heatmap overlay |
+| 🖱️ **Drag-and-Drop Upload** | Intuitive UI supporting JPG, PNG, WEBP, BMP formats |
+| ⚡ **Real-time Inference** | Sub-second predictions via an optimised FastAPI backend |
+| 🎨 **Modern Dark UI** | Clean, responsive interface built with React |
+
+---
+
+## 🖼️ Demo
+
+| Step | Preview |
+|:-:|:-:|
+| **Upload a skin image** | Drag & drop or browse to select |
+| **AI analyses the image** | Model runs inference in milliseconds |
+| **View diagnosis + heatmap** | See the prediction, confidence score, and Grad-CAM overlay |
+
+> Screenshots of real predictions are included in `result-1.png` through `result-8.png` in the root of this repository.
 
 ---
 
@@ -38,14 +61,14 @@
 
 | Category | Conditions |
 |---|---|
-| **Viral (VI-)** | Chickenpox, Shingles |
-| **Bacterial (BA-)** | Cellulitis, Impetigo |
-| **Fungal (FU-)** | Athlete's Foot, Nail Fungus, Ringworm |
-| **Parasitic (PA-)** | Cutaneous Larva Migrans |
+| 🦠 **Viral** | Chickenpox, Shingles |
+| 🧫 **Bacterial** | Cellulitis, Impetigo |
+| 🍄 **Fungal** | Athlete's Foot, Nail Fungus, Ringworm |
+| 🪱 **Parasitic** | Cutaneous Larva Migrans |
 
 ---
 
-## 🗂️ Project Structure
+## 🏗️ Architecture
 
 ```
 skin-disease-detection/
@@ -61,6 +84,18 @@ skin-disease-detection/
 │   ├── package.json
 │   └── public/
 └── README.md
+```
+
+**Stack at a glance:**
+
+```
+React (frontend) ──── POST /predict ────► FastAPI (backend)
+                                                │
+                                          TensorFlow CNN
+                                                │
+                                         Grad-CAM module
+                                                │
+                            ◄── JSON: prediction + confidence + heatmap (base64)
 ```
 
 ---
@@ -93,7 +128,8 @@ pip install -r requirements.txt
 uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-The API will be live at `http://127.0.0.1:8000`.
+The API will be live at `http://127.0.0.1:8000`.  
+Interactive Swagger docs available at `http://127.0.0.1:8000/docs`.
 
 ---
 
@@ -123,7 +159,7 @@ Accepts a skin image and returns the predicted condition, confidence score, and 
 
 ```
 Content-Type: multipart/form-data
-Body: file (image)
+Body: file (image — JPG, PNG, WEBP, or BMP)
 ```
 
 **Response**
@@ -140,16 +176,23 @@ Body: file (image)
 
 ## 🧠 Model Details
 
-- **Architecture:** Convolutional Neural Network (CNN)
-- **Input size:** 224×224 RGB
-- **Output:** Softmax over N disease classes
-- **Explainability:** Grad-CAM (Gradient-weighted Class Activation Mapping) overlaid on the original image to highlight diagnostically relevant regions
+| Property | Value |
+|---|---|
+| **Architecture** | Convolutional Neural Network (CNN) |
+| **Input Size** | 224 × 224 RGB |
+| **Output** | Softmax probability over N disease classes |
+| **Explainability** | Grad-CAM (Gradient-weighted Class Activation Mapping) |
+| **Framework** | TensorFlow / Keras |
+
+**Why Grad-CAM?**
+
+Standard deep learning models are often criticised as "black boxes." This project integrates Grad-CAM to produce saliency heatmaps that visually explain which skin regions the model focused on — essential for building trust in medical AI systems.
 
 ---
 
 ## 📦 Dependencies
 
-### Backend
+**Backend**
 ```
 fastapi
 uvicorn
@@ -160,7 +203,7 @@ Pillow
 python-multipart
 ```
 
-### Frontend
+**Frontend**
 ```
 react
 axios
@@ -177,14 +220,22 @@ axios
 
 ---
 
+## 🙏 Acknowledgements
+
+- [Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization](https://arxiv.org/abs/1610.02391) — Selvaraju et al., ICCV 2017
+- [FastAPI](https://fastapi.tiangolo.com/) — modern, fast web framework for building APIs with Python
+- [React](https://reactjs.org/) — the library for web and native user interfaces
+
+---
+
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-## 🙏 Acknowledgements
+<div align="center">
 
-- [Grad-CAM: Visual Explanations from Deep Networks](https://arxiv.org/abs/1610.02391) — Selvaraju et al.
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [React](https://reactjs.org/)
+**Built with ❤️ — feel free to ⭐ this repo if you found it useful!**
+
+</div>
